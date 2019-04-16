@@ -1,2 +1,26 @@
-dist
 node_modules
+dist
+.vscode
+.DS_Store
+.cache
+ cache
+.eslintrc
+.package-lock.json
+*.log
+*.md
+*.md.*
+*.log.*
+*.DS_Store
+*.iml
+*.idea
+*.lock
+*.cache
+*.idea
+chrome-user-data
+*.sublime-project
+*.sublime-workspace
+*.pom
+.idea
+package-lock.json
+
+

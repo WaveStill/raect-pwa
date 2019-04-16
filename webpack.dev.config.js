@@ -13,7 +13,8 @@ module.exports = {
   /*输出到dist文件夹，输出文件名字为bundle.js*/
   output: {
     path: path.join(__dirname, "./dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    chunkFilename: '[name]-[hash].js'
   },
 
   module: {
@@ -22,6 +23,19 @@ module.exports = {
         test: /\.js$/,
         use: ["babel-loader?cacheDirectory=true"],
         include: path.join(__dirname, "src")
+      },{
+        test: /\.css$/,
+        loaders: ["style-loader", "css-loader", "postcss-loader"]
+      },{
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              limit: 8192,
+            },
+          },
+        ]
       }
     ]
   },
@@ -34,21 +48,26 @@ module.exports = {
       importWorkboxFrom: "local",
       skipWaiting: true, // 强制等待中的 Service Worker 被激活
       clientsClaim: true, // Service Worker 被激活后使其立即获得页面控制权
-      swDest: "sw.js", // 输出 Service worker 文件
+      //swDest: "sw.js", // 输出 Service worker 文件
 
       runtimeCaching: [
         // 配置路由请求缓存
         {
           urlPattern: /.*\.js/, // 匹配文件
           handler: "networkFirst" // 网络优先
+        },
+        {
+          urlPattern: /https:\/\/.*\/static\/.*\.(jpg|png|js|css)/, // 匹配文件
+          handler: "cacheFirst",
+          options:{
+            cacheName: 'my-img-cache',
+            // Configure custom cache expiration.
+            expiration: {
+              maxEntries: 5,
+              maxAgeSeconds: 60,
+            },
+          }
         }
-        // {
-        //   urlPattern: /https:\/\/.*\/static\/.*\.(jpg|png|js|css)/, // 匹配文件
-        //   handler: "cacheFirst",
-        //   maxAgeSeconds: 7 * 24 * 60 * 60,
-        //   // Only cache 10 requests.
-        //   maxEntries: 10
-        // }
       ]
     }),
 
@@ -67,6 +86,6 @@ module.exports = {
     //compress: true,
     historyApiFallback: true,
     host: "localhost",
-    port: 6666
+    port: 8088
   }
 };
