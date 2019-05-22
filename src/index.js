@@ -26,8 +26,9 @@ const getRouter = () => (
   </Router>
 );
 
+
 //document.getElementById('app').innerHTML = "Webpack works"
 
 ReactDom.render(getRouter(), document.getElementById("app"));
-
+// 引入
 registerSw();
